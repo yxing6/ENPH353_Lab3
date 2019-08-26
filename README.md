@@ -1,12 +1,12 @@
-#ENPH353 ROS & GAZEBO LAB
+# ENPH353 ROS & GAZEBO LAB
 
-##Objectives
+## Objectives
 - Learn how to create simulated worlds
 - Learn how to create simulated agents
 - Understand how to launch basic ROS systems
-- Control
+- Control a simulated robot from sensor feedback
 
-##Tasks
+## Tasks
 1. Setup a ROS workspace and clone ENPH353 lab resources.
 2. Create a simple simulated track for line following.
 3. Create a differential drive robot.
@@ -14,8 +14,9 @@
 5. Integrate computer vision based line detection in a ROS node for a PID line follower.
 6. Demonstrate the robot is able to line follow and complete three laps of your track.
 
-##Steps
-###Workspace setup
+## Steps
+
+### Workspace setup
 
 Setup a ROS workspace from the command line.
 ```
@@ -36,3 +37,14 @@ Clone the ENPH353 ROS & Gazebo lab repository.
 cd ~/enph353_ws/src
 git clone https://github.com/ENPH353/enph353_ROS_lab.git
 ```
+
+### Creating a simulated world
+
+ENPH353 uses the most common simulator for ROS: Gazebo. Although Gazebo and ROS are both maintained by [Open Robotics](https://www.openrobotics.org/) they are stand alone tools and follow different standards.
+
+Gazebo uses [SDF](http://sdformat.org/) to configure simulated elements including robots, objects, and the environment. You can modify the appearance or physics of any object in a gazebo world through tuning parameters in an SDF file. ROS uses [URDF](http://wiki.ros.org/urdf) to model robots, which has common elements with SDF but has a larger focus on configuring robot kinematics instead of object physics. Since ROS uses URDF, a typical robot will be built using URDF and converted to SDF when launching a simulation while most other passive world objects can be described with SDF alone.
+
+```
+cd ~/enph353_ws/src/enph353_ROS_lab/models/track
+```
+Edit the 
