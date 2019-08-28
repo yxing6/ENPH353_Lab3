@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.4">
-<model name="full_town">
+<model name="track">
   <static>true</static>
     <link name="link">
       <collision name="collision">
@@ -22,7 +22,7 @@
       <visual name="visual">
         <cast_shadows>false</cast_shadows>
         <pose>0 0 0 </pose>
-        <geometry>/usr/local/share/gazebo/models
+        <geometry>
           <plane>
             <normal>0 0 1</normal>
             <size>3.1 3.1</size>
@@ -32,7 +32,7 @@
           <script>
             <uri>file://materials/scripts</uri>
             <uri>file://materials/textures</uri>
-            <name>full_town</name>
+            <name>track</name>
           </script>
         </material>
       </visual>
