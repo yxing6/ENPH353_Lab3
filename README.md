@@ -2,7 +2,7 @@
 
 ## Objectives
 - Learn how to create simulated worlds
-- Learn how to create simulated agents
+- Learn how to create simulated robots
 - Understand how to launch basic ROS systems
 - Control a simulated robot from sensor feedback
 
@@ -64,6 +64,28 @@ View the track model to see how a planar surface is defined in SDF. Note that th
 cat ~/enph353_ws/src/enph353_ROS_lab/models/track/track.sdf
 ```
 
-Note that the plane visual element is defined with a "track" texture. You will need to add an image to the texture definition. Several track images are provided in the media/materials/textures directory. Locate the `track.material` file and replace the <image_name> tag with the name of your desired texture.
+Note that the plane visual element is defined with a "track" texture. You will need to add an image to the texture definition. Several track images are provided in the media/materials/textures directory. Locate the `track.material` file and replace the <image_name> tag with the file name of your desired texture.
 
-### Creating a simulated agent
+### Launching a ROS system
+
+A ROS system consists of many nodes from self developed or off the shelf packages. It is possible to run a single node from the command line by using the [rosrun](http://wiki.ros.org/rosbash#rosrun) command, however in practice this is automated through launch files. This is done since nodes typically have parameters which are set at run time and managing this through the command line would be extremely difficult.
+
+Many packages provide launch files to allow a user to conveniently run nodes by adjusting parameters within the launch file. To understand how to spawn nodes through a launch file using `roslaunch` read [section 1](http://wiki.ros.org/roslaunch/Commandline%20Tools) from the roslaunch command line tools wiki.
+
+A key point to understand about launch files is they are a means of ensuring modularity in a ROS system. It is possible to include a launch file in another launch file thus allowing for reuse of common nodes through a single launch file.
+
+Follow the Gazebo [tutorial](http://gazebosim.org/tutorials?tut=ros_roslaunch) which will explain how to create a launch file for your world. Use roslaunch to check that your world displays the track with a line to follow.
+
+
+### Creating a simulated robot
+
+Our ROS robot is created using URDF; you can find the full specification is described on the ROS wiki [XML Spec](http://wiki.ros.org/urdf/XML). Specifically review the following:
+
+- [robot](http://wiki.ros.org/urdf/XML/robot)
+- [link](http://wiki.ros.org/urdf/XML/link)
+- [joint](http://wiki.ros.org/urdf/XML/joint)
+- [gazebo plugins](http://gazebosim.org/tutorials?tut=ros_gzplugins)
+
+Essentially the robot consists of links such as wheels, arms, chassis, etc. in a tree structure where each link is connected to another through a joint that describes the frame of reference for the next joint and the allowable degrees of freedom.
+
+Before you start building your own robot you should review the ROS wiki's [tutorial](http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch) for building the visual elements of a basic URDF robot. Following this, review the ROS wiki's [tutorial](http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model) for defining physical properties of your robot.
