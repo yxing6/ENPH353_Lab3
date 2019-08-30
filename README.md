@@ -4,7 +4,7 @@
 - Learn how to create simulated worlds
 - Learn how to create simulated robots
 - Understand how to launch basic ROS systems
-- Control a simulated robot from sensor feedback
+- Control a simulated robot from camera feedback
 
 ## Tasks
 1. Setup a ROS workspace and clone ENPH353 lab resources.
@@ -92,7 +92,7 @@ Include the following snippet in your launch file to spawn your simualted world.
 ```
 When construction more advanced launch files with conditionals and environment variables consult the official [roslaunch xml](http://wiki.ros.org/roslaunch/XML) documentation.
 
-**Instructor Checkin** Demonstrate that you are able to launch a world file with a track texture.
+**Instructor Check-in** Demonstrate to an instructor that you are able to launch a world file with a track texture.
 
 
 ### Creating a simulated robot
@@ -108,8 +108,29 @@ Essentially the robot consists of links such as wheels, arms, chassis, etc. in a
 
 Before you start building your own robot you should review the ROS wiki's [tutorial](http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch) for building the visual elements of a basic URDF robot. Following this, review the ROS wiki's [tutorial](http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model) for defining physical properties of your robot.
 
+A skeleton robot description is provided in the enph353_ros_lab/urdf directory. The most simple robot description can be achieved with a single urdf file, however an additional file (`macros.xacro`) is provided to demonstrate a modular structure whereby you can have common inertial structures shared by multiple robots or multiple links for a single robot. Xacro allows one to define macros and parameters in an xml file. This not only helps reduce repetitive code but also enables parametrizing a robot model through variables which are not available in a standard URDF. Read through the ROS wiki's [xacro tutorial](http://wiki.ros.org/urdf/Tutorials/Using%20Xacro%20to%20Clean%20Up%20a%20URDF%20File) to understand some of the different features of xacro and keep these in mind when building your robot.
+
+A robot launch file has been included in the launch directory. You can include this launch file in same launch file that spawns your simulated world by pasting the following snippet. Ultimately this will allow you to concurrently launch the world and robot through a single command.
+
 ```
 <include file="$(find enph353_ros_lab)/launch/robot.launch">
-	<arg name="init_pose" value="-x 0.0 -y -0.673 -z 1.0 -R 0.0 -P 0.0 -Y 4.71" />
+	<arg name="init_pose" value="-x 0.0 -y 0.0 -z 1.0 -R 0.0 -P 0.0 -Y 0.0" />
 </include>
 ```
+By the end of this lab you need to demonstrate a robot that is able to line follow on the simulated track. To acheive this you will need a driver plugin to move the the robot based on velocity commands that you send and a virtual camera that provides an image stream of the track. These both can be easily added to your robot description as plugins. Check the Gazebo [plugin examples](http://gazebosim.org/tutorials?tut=ros_gzplugins) and integrate a camera plugin and a driver plugin (either skid steer or differential drive).
+
+Proceed to build a robot that fits within a 0.25m x 0.25m x 0.25m box. Use only up to three cameras as sensors and as many wheels as you wish.
+
+To test controlling the robot use the command line to [publish a velocity command](http://wiki.ros.org/rostopic#rostopic_pub) that matches the driver's required input. You can use the [image_view](http://wiki.ros.org/image_view#image_view.2BAC8-diamondback.Viewing_a_single_image_topic) tool to ensure your camera is functional and the orientation is sufficient for line following.
+
+**Instructor Check-in** Demonstrate that you can launch a world with a robot model that meets the aforementioned requirements. Show that you can make the robot move and view the camera stream.
+
+### Line Following
+
+With a robot publishing an image stream and responding to velocity command inputs the next step is to create a classical controller capable of line following based on a camera feedback. Create a node that subscribes to the image stream and publishes velocity messages. Read through the ROS [Publisher/Subscriber tutorial](http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29) to see how to implement this with python.
+
+Create a node directory in the enph353_ros_lab package which will house your python script. Ensure to make the script an executable file. For testing the node you can add it to the lab launch file; see [example include](https://answers.ros.org/question/186510/roslaunch-python/?answer=224989#post-id-224989)
+Something you will find useful is [CV Bridge](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) which translates ROS image message types into OpenCV compatible types. Use CV bridge to consume images from the stream you subscribe to in order to determine the line location with OpenCV.
+
+
+**Instructor Check-in** Demonstrate that your robot is able to take a image stream input and effectively complete one lap following the track.

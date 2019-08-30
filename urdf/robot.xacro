@@ -1,16 +1,16 @@
 <?xml version='1.0'?>
 
-<robot name="myrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:property name="chassis_width" value="0.05"/>
-  <xacro:property name="chassis_length" value="0.1"/>
-  <xacro:property name="chassis_height" value="0.2"/>
+  <xacro:property name="chassis_width" value="0.15"/>
+  <xacro:property name="chassis_length" value="0.2"/>
+  <xacro:property name="chassis_height" value="0.05"/>
   <xacro:property name="chassis_mass" value="0.5"/>
-  <xacro:property name="wheel radius" value="0.02"/>
-  <xacro:property name="wheel width" value="0.02"/>
+  <xacro:property name="wheel_radius" value="0.04"/>
+  <xacro:property name="wheel_width" value="0.03"/>
 
-  <xacro:include filename="$(find enph353_ROS_lab)/urdf/robot.gazebo" />
-  <xacro:include filename="$(find enph353_ROS_lab)/urdf/macros.xacro" />
+  <xacro:include filename="$(find enph353_ros_lab)/urdf/robot.gazebo" />
+  <xacro:include filename="$(find enph353_ros_lab)/urdf/macros.xacro" />
 
 
   <link name='chassis'>
