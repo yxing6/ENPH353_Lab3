@@ -92,7 +92,9 @@ Include the following snippet in your launch file to spawn your simualted world.
 ```
 When construction more advanced launch files with conditionals and environment variables consult the official [roslaunch xml](http://wiki.ros.org/roslaunch/XML) documentation.
 
-**Instructor Check-in** Demonstrate to an instructor that you are able to launch a world file with a track texture.
+**Instructor Check-in**
+
+Demonstrate to an instructor that you are able to launch a world file with a track texture.
 
 
 ### Creating a simulated robot
@@ -108,7 +110,7 @@ Essentially the robot consists of links such as wheels, arms, chassis, etc. in a
 
 Before you start building your own robot you should review the ROS wiki's [tutorial](http://wiki.ros.org/urdf/Tutorials/Building%20a%20Visual%20Robot%20Model%20with%20URDF%20from%20Scratch) for building the visual elements of a basic URDF robot. Following this, review the ROS wiki's [tutorial](http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model) for defining physical properties of your robot.
 
-A skeleton robot description is provided in the enph353_ros_lab/urdf directory. The most simple robot description can be achieved with a single urdf file, however an additional file (`macros.xacro`) is provided to demonstrate a modular structure whereby you can have common inertial structures shared by multiple robots or multiple links for a single robot. Xacro allows one to define macros and parameters in an xml file. This not only helps reduce repetitive code but also enables parametrizing a robot model through variables which are not available in a standard URDF. Read through the ROS wiki's [xacro tutorial](http://wiki.ros.org/urdf/Tutorials/Using%20Xacro%20to%20Clean%20Up%20a%20URDF%20File) to understand some of the different features of xacro and keep these in mind when building your robot.
+A skeleton robot description is provided in the `enph353_ros_lab/urdf` directory. The most simple robot description can be achieved with a single urdf file, however an additional file (`macros.xacro`) is provided to demonstrate a modular structure whereby you can have common inertial structures shared by multiple robots or multiple links for a single robot. Xacro allows one to define macros and parameters in an xml file. This not only helps reduce repetitive code but also enables parametrizing a robot model through variables which are not available in a standard URDF. Read through the ROS wiki's [xacro tutorial](http://wiki.ros.org/urdf/Tutorials/Using%20Xacro%20to%20Clean%20Up%20a%20URDF%20File) to understand some of the different features of xacro and keep these in mind when building your robot.
 
 A robot launch file has been included in the launch directory. You can include this launch file in same launch file that spawns your simulated world by pasting the following snippet. Ultimately this will allow you to concurrently launch the world and robot through a single command.
 
@@ -123,7 +125,9 @@ Proceed to build a robot that fits within a 0.25m x 0.25m x 0.25m box. Use only 
 
 To test controlling the robot use the command line to [publish a velocity command](http://wiki.ros.org/rostopic#rostopic_pub) that matches the driver's required input. You can use the [image_view](http://wiki.ros.org/image_view#image_view.2BAC8-diamondback.Viewing_a_single_image_topic) tool to ensure your camera is functional and the orientation is sufficient for line following.
 
-**Instructor Check-in** Demonstrate that you can launch a world with a robot model that meets the aforementioned requirements. Show that you can make the robot move and view the camera stream.
+**Instructor Check-in**
+
+Demonstrate that you can launch a world with a robot model that meets the aforementioned requirements. Show that you can make the robot move and view the camera stream.
 
 ### Line Following
 
@@ -133,4 +137,6 @@ Create a node directory in the enph353_ros_lab package which will house your pyt
 Something you will find useful is [CV Bridge](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) which translates ROS image message types into OpenCV compatible types. Use CV bridge to consume images from the stream you subscribe to in order to determine the line location with OpenCV.
 
 
-**Instructor Check-in** Demonstrate that your robot is able to take a image stream input and effectively complete one lap following the track.
+**Instructor Check-in**
+
+Demonstrate that your robot is able to take a image stream input and effectively complete one lap following the track.
