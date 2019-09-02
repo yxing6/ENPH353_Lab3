@@ -34,7 +34,7 @@ Whenever working with ROS, one must source the active workspace in each terminal
 While it is possible to add this command to your `./bashrc` file to ensure each new terminal is sourced, this can cause problems when switching between workspaces or after rebuilding a workspace. For convenience you could add the following alias to `./bashrc` which allows you to type `source353` to source this workspace.
 
 ```
-sed -i -e "\$aalias source353=\'source ~\/enph353_ws\/devel\/setup.bash\`" ~/.bashrc
+echo "alias source353='source ~/enph353_ws/devel/setup.bash'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
