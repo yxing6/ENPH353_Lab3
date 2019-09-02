@@ -46,7 +46,7 @@ cat ~/.bashrc
 Clone the ENPH353 ROS & Gazebo lab repository.
 ```
 cd ~/enph353_ws/src
-git clone https://github.com/ENPH353/enph353_ROS_lab.git
+git clone https://github.com/ENPH353/enph353_ros_lab.git
 ```
 
 ### Creating a simulated world
@@ -58,12 +58,12 @@ Gazebo uses [SDF](http://sdformat.org/) to configure simulated elements includin
 
 A basic world can be constructed by including models in the world description file. A skeleton world file is provided. Check the file to see the basic structure and note that the world file simply includes several models defined elsewhere.
 ```
-cat ~/enph353_ws/src/enph353_ROS_lab/worlds/353_ros_lab.world
+cat ~/enph353_ws/src/enph353_ros_lab/worlds/353_ros_lab.world
 ```
 
 It is also possible to use SDF to describe a model directly in the world file, however this reduces the reusability of generic models. The lab world contains two models: the sun and a track. The sun is a standard gazebo model, while the track is our custom surface which we texture with an image to create a basic 2D world for our robot to navigate.
 
-View the track model to see how a planar surface is defined in SDF. Note that this model has single link with visual and collision element, both are required render the link. With URDF there is an additional requirement that each link has an inertial element. Both SDF and URDF do not require the visual and collision elements to match, this can be used to create objects that have complex visual appearance but simple collision geometery to reduce the computation required to detect collisions. Similary one can create visually large objects with infinitesimally small collision boxes if the purpose of the model is purely to provide a visual reference in the world.
+View the track model to see how a planar surface is defined in SDF. Note that this model has single link with *visual* and *collision* element, both are required to render the link. With URDF there is an additional requirement that each link has an *inertial* element. Both SDF and URDF do not require the visual and collision elements to match, this can be used to create objects that have complex visual appearance but simple collision geometery to reduce the computation required to detect collisions. Similary one can create visually large objects with infinitesimally small collision boxes if the purpose of the model is purely to provide a visual reference in the world.
 
 ```
 cat ~/enph353_ws/src/enph353_ROS_lab/models/track/track.sdf
@@ -84,9 +84,9 @@ Read through Clearpath Robotics' [tutorial](http://www.clearpathrobotics.com/ass
 Include the following snippet in your launch file to spawn your simualted world.
 ```
 <include file="$(find gazebo_ros)/launch/empty_world.launch">
-	<env name="GAZEBO_RESOURCE_PATH" value="$(find enph353_ROS_lab)"/>
-	<env name="GAZEBO_MODEL_PATH" value="$(find enph353_ROS_lab)/models"/>
-	<arg name="world_name" value="$(find enph353_ROS_lab)/worlds/353_ros_lab.world"/>
+	<env name="GAZEBO_RESOURCE_PATH" value="$(find enph353_ros_lab)"/>
+	<env name="GAZEBO_MODEL_PATH" value="$(find enph353_ros_lab)/models"/>
+	<arg name="world_name" value="$(find enph353_ros_lab)/worlds/353_ros_lab.world"/>
 	<arg name="gui" value="true"/>
 </include>
 ```
