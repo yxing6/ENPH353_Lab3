@@ -79,7 +79,7 @@ Many packages provide launch files to allow a user to conveniently run nodes by 
 
 A key point to understand about launch files is they are a means of ensuring modularity in a ROS system. It is possible to include a launch file in another launch file, thus allowing for reuse of common nodes through a single launch file.
 
-Read through Clearpath Robotics' [tutorial](http://www.clearpathrobotics.com/assets/guides/ros/Launch%20Files.html) which will explain how to create a launch file. Create a new directory: `~/enph353_ws/src/enph353_ROS_lab/launch` and write your own launch file to spawn a world with the correct track surface. 
+Read through Clearpath Robotics' [tutorial](http://www.clearpathrobotics.com/assets/guides/ros/Launch%20Files.html) which will explain how to create a launch file. In the folder `~/enph353_ws/src/enph353_ROS_lab/launch` create your own launch file to spawn a world with the correct track surface. 
 
 Include the following snippet in your launch file to spawn your simualted world.
 ```
@@ -121,7 +121,7 @@ A robot launch file has been included in the launch directory. You can include t
 ```
 By the end of this lab you need to demonstrate a robot that is able to line follow on the simulated track. To acheive this you will need a driver plugin to move the the robot based on velocity commands that you send and a virtual camera that provides an image stream of the track. These both can be easily added to your robot description as plugins. Check the Gazebo [plugin examples](http://gazebosim.org/tutorials?tut=ros_gzplugins) and integrate a camera plugin and a driver plugin (either skid steer or differential drive).
 
-Proceed to build a robot that fits within a 0.25m x 0.25m x 0.25m box. Use only up to three cameras as sensors and as many wheels as you wish.
+Proceed to build a robot that fits within a 0.25m x 0.25m x 0.25m box. Use a camera as sensors and as many wheels as you wish (4 is recommended).
 
 To test controlling the robot use the command line to [publish a velocity command](http://wiki.ros.org/rostopic#rostopic_pub) that matches the driver's required input. You can use the [image_view](http://wiki.ros.org/image_view#image_view.2BAC8-diamondback.Viewing_a_single_image_topic) tool to ensure your camera is functional and the orientation is sufficient for line following.
 
