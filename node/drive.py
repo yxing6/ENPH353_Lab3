@@ -24,8 +24,13 @@ class Drive:
         self.bridge = CvBridge()
 
         # P control parameters
-        self.Kp = 0.03 # Proportional gain
+        self.Kp = 0.01 # Proportional gain
         self.mid_x = 0
+
+        self.base_linear_vel = 0.2  # Base linear velocity
+        self.max_error = 100  # Maximum allowable error for full speed
+        self.min_linear_vel = 0.01  # Minimum linear velocity
+
 
     def image_callback(self, data):
 
@@ -37,8 +42,18 @@ class Drive:
 
         error = self.detect_line(cv_image)
         angular_vel = self.Kp * error
-        linear_vel = 0.1
 
+
+        # Linear velocity control based on error
+        # linear_vel = self.base_linear_vel - (error / self.max_error) * (self.base_linear_vel - self.min_linear_vel)
+        # linear_vel = max(linear_vel, self.min_linear_vel)  # Ensure linear_vel is not below the minimum
+        # print(linear_vel)
+        # Create Twist message and publish to cmd_vel
+        # if error == 0:
+        #     linear_vel = 0.5
+        # else:
+        #     linear_vel = 0.1 / error
+        linear_vel = 0.03
         # Create Twist message and publish to cmd_vel
         twist_msg = Twist()
         twist_msg.linear.x = linear_vel
