@@ -233,6 +233,6 @@
     <topicName>cmd_vel</topicName>
     <broadcastTF>false</broadcastTF>
   </plugin>
-</gazebo>
+  </gazebo>
 
 </robot>
