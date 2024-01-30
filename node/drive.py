@@ -23,24 +23,21 @@ class Drive:
         # Create a bridge between ROS and OpenCV
         self.bridge = CvBridge()
 
+        # P control parameters
+        self.Kp = 0.03 # Proportional gain
+        self.mid_x = 0
+
     def image_callback(self, data):
 
-        # try:
-        #     # Convert the ROS Image message to OpenCV image
-        #     cv_image = self.bridge.imgmsg_to_cv2(data, 'bgr8')
-        # except Exception as e:
-        #     rospy.logerr(e)
-        #     return
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(data, 'bgr8')
+        except Exception as e:
+            rospy.logerr(e)
+            return
 
-        # # Process the image (replace this with your image processing logic)
-        # gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-        # kernel_size = 13
-        # blur_gray = cv.GaussianBlur(gray,(kernel_size, kernel_size),5, 5)
-        # ret, binary = cv.threshold(blur_gray, 70, 255, 0)
-        # edges = cv.Canny(binary, 0, 200)
-        # indices = [i for i, x in enumerate(edges[-1,:]) if x == 255]
-        # linear_vel = 0.5  # m/s
-        # angular_vel = 0.2  # rad/s
+        error = self.detect_line(cv_image)
+        angular_vel = self.Kp * error
+        linear_vel = 0.1
 
         # Create Twist message and publish to cmd_vel
         twist_msg = Twist()
@@ -48,9 +45,36 @@ class Drive:
         twist_msg.angular.z = angular_vel
         self.cmd_vel_pub.publish(twist_msg)
 
-        # Optional: Display the processed image (for debugging purposes)
-        # cv2.imshow('Processed Image', cv_image)
-        # cv2.waitKey(1)
+
+    def detect_line(self, img):
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        kernel_size = 13
+        blur_gray = cv.GaussianBlur(gray,(kernel_size, kernel_size),5, 5)
+        ret, binary = cv.threshold(blur_gray, 70, 255, 0)
+        edges = cv.Canny(binary, 0, 200)
+        last_row = edges[-1,:]
+        new_mid_x = self.find_mid(edges[-1,:], self.mid_x)
+        self.mid_x = new_mid_x
+
+        mid_frame = len(last_row) / 2
+        error = mid_frame - new_mid_x
+
+        return error
+
+    def find_mid(self, bottom_row, previous_mid):
+        indices = [i for i, x in enumerate(bottom_row) if x == 255]
+        if len(indices) == 2:
+            new_mid = int((indices[0] + indices[1])/2)
+        elif len(indices) == 1:
+            if indices[0] < len(bottom_row):
+                new_mid = int(indices[0] / 2)
+            else:
+                new_mid = int((indices[0] + len(indices)) / 2)
+        else:
+            new_mid = previous_mid
+
+        return new_mid
+
 
 def main():
     try:
