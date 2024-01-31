@@ -24,10 +24,10 @@ class Drive:
         self.bridge = CvBridge()
 
         # control parameters
-        self.Kp = 0.015 # Proportional gain
-        self.linear_val_max = 0.45
-        self.linear_val_min = 0.15
-        self.error_threshold = 20
+        self.Kp = 0.01 # Proportional gain
+        # self.linear_val_max = 0.25
+        # self.linear_val_min = 0.15
+        # self.error_threshold = 10
         self.mid_x = 0
 
     def image_callback(self, data):
@@ -41,11 +41,11 @@ class Drive:
         error = self.detect_line(cv_image)
 
 
-        if abs(error) <= self.error_threshold:
-            linear_vel = self.linear_val_max
-        else:
-            linear_vel = self.linear_val_min
-
+        # if abs(error) <= self.error_threshold:
+        #     linear_vel = self.linear_val_max
+        # else:
+        #     linear_vel = self.linear_val_min
+        linear_vel = 0.2
         angular_vel = self.Kp * error
 
         # Create Twist message and publish to cmd_vel
