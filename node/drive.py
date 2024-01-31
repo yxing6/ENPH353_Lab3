@@ -25,8 +25,8 @@ class Drive:
 
         # control parameters
         self.Kp = 0.015 # Proportional gain
-        self.linear_val_max = 0.4
-        self.linear_val_min = 0.2
+        self.linear_val_max = 0.45
+        self.linear_val_min = 0.15
         self.error_threshold = 20
         self.mid_x = 0
 
@@ -47,8 +47,6 @@ class Drive:
             linear_vel = self.linear_val_min
 
         angular_vel = self.Kp * error
-        # print(angular_vel)
-
 
         # Create Twist message and publish to cmd_vel
         twist_msg = Twist()
@@ -65,7 +63,7 @@ class Drive:
         edges = cv.Canny(binary, 0, 200)
         last_row = edges[-1,:]
         
-        new_mid_x = self.find_mid(edges[-1,:], self.mid_x)
+        new_mid_x = self.find_mid(last_row, self.mid_x)
         self.mid_x = new_mid_x
 
         mid_frame = len(last_row) / 2
