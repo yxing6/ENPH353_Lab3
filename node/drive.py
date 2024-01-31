@@ -23,14 +23,12 @@ class Drive:
         # Create a bridge between ROS and OpenCV
         self.bridge = CvBridge()
 
-        # P control parameters
-        self.Kp = 0.01 # Proportional gain
+        # control parameters
+        self.Kp = 0.015 # Proportional gain
+        self.linear_val_max = 0.4
+        self.linear_val_min = 0.2
+        self.error_threshold = 20
         self.mid_x = 0
-
-        self.base_linear_vel = 0.2  # Base linear velocity
-        self.max_error = 100  # Maximum allowable error for full speed
-        self.min_linear_vel = 0.01  # Minimum linear velocity
-
 
     def image_callback(self, data):
 
@@ -41,19 +39,17 @@ class Drive:
             return
 
         error = self.detect_line(cv_image)
+
+
+        if abs(error) <= self.error_threshold:
+            linear_vel = self.linear_val_max
+        else:
+            linear_vel = self.linear_val_min
+
         angular_vel = self.Kp * error
+        # print(angular_vel)
 
 
-        # Linear velocity control based on error
-        # linear_vel = self.base_linear_vel - (error / self.max_error) * (self.base_linear_vel - self.min_linear_vel)
-        # linear_vel = max(linear_vel, self.min_linear_vel)  # Ensure linear_vel is not below the minimum
-        # print(linear_vel)
-        # Create Twist message and publish to cmd_vel
-        # if error == 0:
-        #     linear_vel = 0.5
-        # else:
-        #     linear_vel = 0.1 / error
-        linear_vel = 0.03
         # Create Twist message and publish to cmd_vel
         twist_msg = Twist()
         twist_msg.linear.x = linear_vel
@@ -68,6 +64,7 @@ class Drive:
         ret, binary = cv.threshold(blur_gray, 70, 255, 0)
         edges = cv.Canny(binary, 0, 200)
         last_row = edges[-1,:]
+        
         new_mid_x = self.find_mid(edges[-1,:], self.mid_x)
         self.mid_x = new_mid_x
 
@@ -77,14 +74,15 @@ class Drive:
         return error
 
     def find_mid(self, bottom_row, previous_mid):
+
         indices = [i for i, x in enumerate(bottom_row) if x == 255]
         if len(indices) == 2:
             new_mid = int((indices[0] + indices[1])/2)
-        elif len(indices) == 1:
-            if indices[0] < len(bottom_row):
-                new_mid = int(indices[0] / 2)
-            else:
-                new_mid = int((indices[0] + len(indices)) / 2)
+        # elif len(indices) == 1:
+        #     if indices[0] < len(bottom_row):
+        #         new_mid = int(indices[0] / 2)
+        #     else:
+        #         new_mid = int((indices[0] + len(indices)) / 2)
         else:
             new_mid = previous_mid
 
