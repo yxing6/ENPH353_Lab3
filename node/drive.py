@@ -24,7 +24,7 @@ class Drive:
         self.bridge = CvBridge()
 
         # control parameters
-        self.Kp = 0.01 # Proportional gain
+        self.Kp = 0.02 # Proportional gain
         # self.linear_val_max = 0.25
         # self.linear_val_min = 0.15
         # self.error_threshold = 10
@@ -61,6 +61,8 @@ class Drive:
         blur_gray = cv.GaussianBlur(gray,(kernel_size, kernel_size),5, 5)
         ret, binary = cv.threshold(blur_gray, 70, 255, 0)
         edges = cv.Canny(binary, 0, 200)
+        # last_row = binary[-1,:]
+        # print(binary.type())
         last_row = edges[-1,:]
         
         new_mid_x = self.find_mid(last_row, self.mid_x)
@@ -75,7 +77,24 @@ class Drive:
 
         indices = [i for i, x in enumerate(bottom_row) if x == 255]
         if len(indices) == 2:
-            new_mid = int((indices[0] + indices[1])/2)
+            new_mid = (indices[0] + indices[1])/2
+        # elif len(indices) == 1:
+        #     if indices[0] < len(bottom_row):
+        #         new_mid = int(indices[0] / 2)
+        #     else:
+        #         new_mid = int((indices[0] + len(indices)) / 2)
+        else:
+            new_mid = previous_mid
+
+        return new_mid
+
+    
+    def find_mid_binary(self, bottom_row, previous_mid):
+
+        first_index = bottom_row.index(255)
+        last_index = len(bottom_row) - 1 - bottom_row[::-1].index(255)
+        if first_index != last_index:
+            new_mid = (first_index + last_index)/2
         # elif len(indices) == 1:
         #     if indices[0] < len(bottom_row):
         #         new_mid = int(indices[0] / 2)
