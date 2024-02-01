@@ -28,8 +28,8 @@ class Drive:
         # control parameters
         self.Kp = 0.02                  # Proportional gain
         self.error_threshold = 20       # drive with different linear speed wrt this error_theshold
-        self.linear_val_max = 0.6       # drive fast when error is small 
-        self.linear_val_min = 0.2       # drive slow when error is small 
+        self.linear_val_max = 0.7       # drive fast when error is small 
+        self.linear_val_min = 0.5       # drive slow when error is small 
         self.mid_x = 0.0                # center of the frame initialized to be 0, updated at each find_middle function call 
  
     def image_callback(self, data):
@@ -54,22 +54,17 @@ class Drive:
     def calculate_speed(self, img):
 
         dim_x = img.shape[1]
-        # print(type(dim_x))
-
 
         # detect_line calculates and modifies the target center
         self.find_middle(img)
         # angular error is the different between the center of the frame and targer center
-        angular_error = float(dim_x) / 2 - self.mid_x
+        angular_error = dim_x / 2 - self.mid_x
         angular_vel = self.Kp * angular_error
-
-        print(type(angular_vel))
 
         if abs(angular_error) <= self.error_threshold:
             linear_vel = self.linear_val_max
         else:
             linear_vel = self.linear_val_min
-        # linear_vel = 0.5
 
         return linear_vel, angular_vel
 
