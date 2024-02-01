@@ -50,7 +50,6 @@ class Drive:
         twist_msg.angular.z = speed[1]
         self.cmd_vel_pub.publish(twist_msg)
 
-
     def calculate_speed(self, img):
 
         dim_x = img.shape[1]
@@ -67,7 +66,6 @@ class Drive:
             linear_vel = self.linear_val_min
 
         return linear_vel, angular_vel
-
 
     def find_middle(self, img):
 
@@ -100,13 +98,12 @@ class Drive:
             new_mid = (first_index + last_index)/2
             self.mid_x = new_mid
 
-
 def main():
     try:
         image_subscriber = Drive()
         rospy.spin()
     except rospy.ROSInterruptException:
-        cv2.destroyAllWindows()
+        cv.destroyAllWindows()
 
 if __name__ == '__main__':
     main()
