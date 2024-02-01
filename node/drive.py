@@ -3,11 +3,12 @@
 import rospy
 import roslib
 import sys
-import cv2 as cv 
+import cv2 as cv
 import numpy as np
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+
 
 class Drive:
 
@@ -26,12 +27,12 @@ class Drive:
         self.bridge = CvBridge()
 
         # control parameters
-        self.Kp = 0.02                  # Proportional gain
-        self.error_threshold = 20       # drive with different linear speed wrt this error_theshold
-        self.linear_val_max = 0.7       # drive fast when error is small 
-        self.linear_val_min = 0.5       # drive slow when error is small 
-        self.mid_x = 0.0                # center of the frame initialized to be 0, updated at each find_middle function call 
- 
+        self.Kp = 0.02  # Proportional gain
+        self.error_threshold = 20  # drive with different linear speed wrt this error_theshold
+        self.linear_val_max = 0.7  # drive fast when error is small
+        self.linear_val_min = 0.5  # drive slow when error is small
+        self.mid_x = 0.0  # center of the frame initialized to be 0, updated at each find_middle function call
+
     def image_callback(self, data):
 
         # process the scribed image from camera in openCV 
@@ -41,7 +42,7 @@ class Drive:
         except Exception as e:
             rospy.logerr(e)
             return
-        
+
         # Create Twist message and publish to cmd_vel
         twist_msg = Twist()
         speed = self.calculate_speed(cv_image)
@@ -80,7 +81,7 @@ class Drive:
         kernel_size = 13
         sigma_x = 5
         sigma_y = 5
-        blur_gray = cv.GaussianBlur(gray,(kernel_size, kernel_size), sigma_x, sigma_y)                          # gray scale the image
+        blur_gray = cv.GaussianBlur(gray, (kernel_size, kernel_size), sigma_x, sigma_y)  # gray scale the image
 
         # binary it
         ret, binary = cv.threshold(blur_gray, 70, 255, cv.THRESH_BINARY)
@@ -88,15 +89,16 @@ class Drive:
         cv.imshow("name", binary)
         cv.waitKey(3)
 
-        last_row = binary[-1,:]
+        last_row = binary[-1, :]
         print(last_row)
 
         if np.any(last_row == 0):
             last_list = last_row.tolist()
             first_index = last_list.index(0)
             last_index = len(last_list) - 1 - last_list[::-1].index(0)
-            new_mid = (first_index + last_index)/2
+            new_mid = (first_index + last_index) / 2
             self.mid_x = new_mid
+
 
 def main():
     try:
@@ -104,6 +106,7 @@ def main():
         rospy.spin()
     except rospy.ROSInterruptException:
         cv.destroyAllWindows()
+
 
 if __name__ == '__main__':
     main()
