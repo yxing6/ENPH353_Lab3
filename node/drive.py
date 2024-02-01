@@ -3,7 +3,8 @@
 import rospy
 import roslib
 import sys
-import cv2 as cv
+import cv2 as cv 
+import numpy as np
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
@@ -38,7 +39,7 @@ class Drive:
             rospy.logerr(e)
             return
 
-        error = self.detect_line(cv_image)
+        angular_error = self.detect_line(cv_image)
 
 
         # if abs(error) <= self.error_threshold:
@@ -46,7 +47,7 @@ class Drive:
         # else:
         #     linear_vel = self.linear_val_min
         linear_vel = 0.2
-        angular_vel = self.Kp * error
+        angular_vel = self.Kp * angular_error
 
         # Create Twist message and publish to cmd_vel
         twist_msg = Twist()
@@ -61,11 +62,17 @@ class Drive:
         blur_gray = cv.GaussianBlur(gray,(kernel_size, kernel_size),5, 5)
         ret, binary = cv.threshold(blur_gray, 70, 255, 0)
         edges = cv.Canny(binary, 0, 200)
-        # last_row = binary[-1,:]
+        cv.imshow("name", binary)
+        cv.waitKey(3)
+        last_row = binary[-1,:]
+        # print(last_row)
         # print(binary.type())
-        last_row = edges[-1,:]
+
+        # target_row = edges[-30,:]
+        print(last_row)
+
         
-        new_mid_x = self.find_mid(last_row, self.mid_x)
+        new_mid_x = self.find_mid_binary(last_row, self.mid_x)
         self.mid_x = new_mid_x
 
         mid_frame = len(last_row) / 2
@@ -76,30 +83,30 @@ class Drive:
     def find_mid(self, bottom_row, previous_mid):
 
         indices = [i for i, x in enumerate(bottom_row) if x == 255]
-        if len(indices) == 2:
+        
+        if len(indices) >= 2:
             new_mid = (indices[0] + indices[1])/2
-        # elif len(indices) == 1:
-        #     if indices[0] < len(bottom_row):
-        #         new_mid = int(indices[0] / 2)
-        #     else:
-        #         new_mid = int((indices[0] + len(indices)) / 2)
+        elif len(indices) == 1:
+            if indices[0] < len(bottom_row):
+                new_mid = int(indices[0] / 2)
+            else:
+                new_mid = int((indices[0] + len(indices)) / 2)
         else:
             new_mid = previous_mid
 
+        print(indices, new_mid)
         return new_mid
 
     
     def find_mid_binary(self, bottom_row, previous_mid):
-
-        first_index = bottom_row.index(255)
-        last_index = len(bottom_row) - 1 - bottom_row[::-1].index(255)
-        if first_index != last_index:
+        
+        if np.any(bottom_row == 0):
+            bottom_list = bottom_row.tolist()
+            print(bottom_list)
+            first_index = bottom_list.index(0)
+            last_index = len(bottom_list) - 1 - bottom_list[::-1].index(0)
             new_mid = (first_index + last_index)/2
-        # elif len(indices) == 1:
-        #     if indices[0] < len(bottom_row):
-        #         new_mid = int(indices[0] / 2)
-        #     else:
-        #         new_mid = int((indices[0] + len(indices)) / 2)
+            print(first_index, new_mid, last_index)
         else:
             new_mid = previous_mid
 
