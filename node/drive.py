@@ -26,9 +26,9 @@ class Drive:
 
         # control parameters
         self.Kp = 0.02 # Proportional gain
-        # self.linear_val_max = 0.25
-        # self.linear_val_min = 0.15
-        # self.error_threshold = 10
+        self.linear_val_max = 0.6
+        self.linear_val_min = 0.2
+        self.error_threshold = 20
         self.mid_x = 0
 
     def image_callback(self, data):
@@ -41,12 +41,12 @@ class Drive:
 
         angular_error = self.detect_line(cv_image)
 
-
-        # if abs(error) <= self.error_threshold:
-        #     linear_vel = self.linear_val_max
-        # else:
-        #     linear_vel = self.linear_val_min
-        linear_vel = 0.2
+        print(angular_error)
+        if abs(angular_error) <= self.error_threshold:
+            linear_vel = self.linear_val_max
+        else:
+            linear_vel = self.linear_val_min
+        # linear_vel = 0.2
         angular_vel = self.Kp * angular_error
 
         # Create Twist message and publish to cmd_vel
@@ -79,23 +79,6 @@ class Drive:
         error = mid_frame - new_mid_x
 
         return error
-
-    def find_mid(self, bottom_row, previous_mid):
-
-        indices = [i for i, x in enumerate(bottom_row) if x == 255]
-        
-        if len(indices) >= 2:
-            new_mid = (indices[0] + indices[1])/2
-        elif len(indices) == 1:
-            if indices[0] < len(bottom_row):
-                new_mid = int(indices[0] / 2)
-            else:
-                new_mid = int((indices[0] + len(indices)) / 2)
-        else:
-            new_mid = previous_mid
-
-        print(indices, new_mid)
-        return new_mid
 
     
     def find_mid_binary(self, bottom_row, previous_mid):
